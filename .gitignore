@@ -1,0 +1,11 @@
+# Ignore Next.js build output
+.next/
+
+# Ignore Node.js build output
+node_modules/
+
+# Ignore environment files
+.env*
+
+# Ignore Visual Studio Code directory
+.vscode/
