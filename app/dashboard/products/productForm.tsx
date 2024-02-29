@@ -23,9 +23,12 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 //import useAxiosAuth from "@/lib/hooks/useAxiosAuth";
 import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import { product } from "@/types/type";
 import axios from "axios";
+import Link from "next/link";
+import { ProductService } from "@/lib/service/product/productservice";
+import { toast, ToastContainer } from 'react-toastify';
+  import "react-toastify/dist/ReactToastify.css";
 
 interface FormData {
   name: string;
@@ -44,8 +47,6 @@ function SelectForm({
   title,
 }: Props) {
   const router = useRouter();
-  //const axiosAuth = useAxiosAuth();
- // const { data: session, update } = useSession();
   const [errors, setError] = useState<any>([]);
   const [disabled, setDisabled] = useState<boolean>(false);
 
@@ -60,9 +61,9 @@ function SelectForm({
   if (product) {
     defaultValues = {
       name: product.name,
-      price: product.price?.toString(),
+      price: product.price?.toString() ?? 0,
       description: product.description,
-      productId:product.productId
+      productId: product.productId ?? 0
     };
   }
   const FormSchema = z
@@ -76,18 +77,18 @@ function SelectForm({
       description: z.string({
         required_error: "Status is required.",
       }),
-      
+
     })
   const FormEditSchema = z.object({
     name: z.string({
-        required_error: "Name is required.",
-      }),
-      price: z.string({
-        required_error: "price Number is required.",
-      }),
-      description: z.string({
-        required_error: "Status is required.",
-      }),
+      required_error: "Name is required.",
+    }),
+    price: z.string({
+      required_error: "price Number is required.",
+    }),
+    description: z.string({
+      required_error: "Status is required.",
+    }),
   });
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -96,76 +97,120 @@ function SelectForm({
   });
 
   useEffect(() => {
-      setDisabled(false);
- });
+    setDisabled(false);
+  });
 
   const onSubmit = async (values: z.infer<typeof FormSchema>) => {
     console.log("Values", values);
-    if (!product) {
-      try {
-        const { data } = await axios.post("https://localhost:5001/api/products", values, {
-          // headers: {
-          //   "Content-Type": "multipart/form-data",
-          // },
-        });
+    try {
+      if (!product) {
+        const productData: product = {
+          name: values.name,
+          price: parseFloat(values.price),
+          description: values.description
+        };
+        const data = await ProductService.createProduct(productData);
 
-        if (data.statusCode == 201) {      
-          router.push("/dashboard/products")
+        console.log(data.code);
+        if (data.code === 201) {
+          //router.push("/dashboard/products");
           toast.success(data.message, {
-            position: "top-right",
-            autoClose: 1000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
+            position: "bottom-right"
           });
         }
-        router.refresh();
-      } catch (error: any) {
-        if (error.response) {
-          if (error.response.status == 422) {
-            setError(error.response.data.errors);
-          }
-        }
-      }
-    }
-
-    // single user
-    if (product) {
-      try {
-        const { data } = await axios.put(
-          `https://localhost:5001/api/products/${product?.productId}`,
-          { ...values, _method: "PUT" }
-        );
-
-        if (data.statusCode == 201) {
-         
-            const { product } = data.data;
-          
+      } else {
+        const productData: product = {
+          productId: product.productId || undefined, // Ensure productId is provided for update
+          name: values.name,
+          price: parseFloat(values.price),
+          description: values.description
+        };
+        const data = await ProductService.updateProduct(product.productId || 0, productData);
+        if (data.code === 201) {
           router.back();
           toast.success(data.message, {
-            position: "top-right",
-            autoClose: 1000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
+            position: "bottom-right"
           });
         }
-        router.refresh();
-      } catch (error: any) {
-        if (error.response) {
-          if (error.response.status == 422) {
-            setError(error.response.data.errors);
-          }
+      }
+      router.refresh();
+    } catch (error: any) {
+      if (error.response) {
+        if (error.response.status === 422) {
+          setError(error.response.data.errors);
         }
       }
     }
   };
+  
+
+  // const onSubmit = async (values: z.infer<typeof FormSchema>) => {
+  //   console.log("Values", values);
+  //   if (!product) {
+  //     try {
+  //       const { data } = await axios.post("https://localhost:5001/api/products", values, {
+  //         // headers: {
+  //         //   "Content-Type": "multipart/form-data",
+  //         // },
+  //       });
+
+  //       if (data.statusCode == 201) {
+  //         router.push("/dashboard/products")
+  //         toast.success(data.message, {
+  //           position: "top-right",
+  //           autoClose: 1000,
+  //           hideProgressBar: false,
+  //           closeOnClick: true,
+  //           pauseOnHover: true,
+  //           draggable: true,
+  //           progress: undefined,
+  //           theme: "light",
+  //         });
+  //       }
+  //       router.refresh();
+  //     } catch (error: any) {
+  //       if (error.response) {
+  //         if (error.response.status == 422) {
+  //           setError(error.response.data.errors);
+  //         }
+  //       }
+  //     }
+  //   }
+
+  //   // single user
+  //   if (product) {
+  //     try {
+  //       const { data } = await axios.put(
+  //         `https://localhost:5001/api/products/${product?.productId}`,
+  //         { ...values, _method: "PUT" }
+  //       );
+
+  //       if (data.statusCode == 201) {
+
+  //         const { product } = data.data;
+
+  //         router.back();
+  //         toast.success(data.message, {
+  //           position: "top-right",
+  //           autoClose: 1000,
+  //           hideProgressBar: false,
+  //           closeOnClick: true,
+  //           pauseOnHover: true,
+  //           draggable: true,
+  //           progress: undefined,
+  //           theme: "light",
+  //         });
+  //       }
+  //       router.refresh();
+  //     } catch (error: any) {
+  //       if (error.response) {
+  //         if (error.response.status == 422) {
+  //           setError(error.response.data.errors);
+  //         }
+  //       }
+  //     }
+  //   }
+  // };
 
   const handleFileChange = (event: any) => {
     const file = event.target.files[0];
@@ -175,7 +220,7 @@ function SelectForm({
     <Card className="p-4 shadow-xl sm:rounded-lg mt-5">
       <Form {...form}>
         <div className="mb-5 bg-gray-500 py-2 text-white px-2 rounded-md">
-        {title}
+          {title}
         </div>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -243,10 +288,18 @@ function SelectForm({
             Submit
           </Button>
 
-          
+          <Link href="/dashboard/products">
+          <Button className="mt-4 ml-5 bg-cyan-500" type="button">
+            Go to list
+          </Button>
+        </Link>
+
+
         </form>
       </Form>
+
     </Card>
+
   );
 }
 

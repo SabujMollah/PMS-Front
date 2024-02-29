@@ -12,7 +12,7 @@ export type SideNavItemGroup = {
 };
 
 export type product={
-  productId:number;
+  productId?:number;
   name:string;
   price:number;
   description:string;

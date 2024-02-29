@@ -117,3 +117,7 @@
   background: #999999;
   border-radius: 10px;
 }
+
+.Toastify__toast-container {
+  z-index: 9999;
+}

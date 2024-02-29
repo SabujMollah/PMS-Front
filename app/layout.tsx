@@ -5,6 +5,8 @@ import Header from '@/components/header';
 import PageWrapper from '@/components/pagewrapper';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Metadata } from 'next';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const karla = Karla({
   weight: ["200", "300", "400", "500", "600", "700", "800"],
@@ -31,11 +33,16 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <div className='min-h-screen flex'>
+          <ToastContainer />
             <SideBar></SideBar>
-            <Header></Header>
+              
+            <Header></Header>    
+             
             <PageWrapper children={children}></PageWrapper>
+            
           </div>
         </ThemeProvider>
+       
       </body>
     </html>
   )

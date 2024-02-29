@@ -85,9 +85,6 @@ function ActionsCell({ row }: any) {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem className="cursor-pointer">
-            {/* <Link href={`/dashboard/products/${12}`}>
-              <a>Edit</a>
-            </Link> */}
             <Link href={`/dashboard/products/${product.productId}`} id="edit"> Edit
               </Link>
           </DropdownMenuItem>

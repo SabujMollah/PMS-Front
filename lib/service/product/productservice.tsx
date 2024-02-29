@@ -28,12 +28,23 @@ export class ProductService {
     }
   };
 
-  static editProductById = async (id: number): Promise<product> => {
+  
+  static createProduct = async (productData: product): Promise<any> => {
     try {
-      const response = await axios.put(`https://localhost:5001/api/products/${id}`,{ httpsAgent: agent});
+      const response = await axios.post("https://localhost:5001/api/products", productData, { httpsAgent: agent });
       return response.data;
     } catch (error) {
-      console.error(`Error fetching product with ID ${id}:`, error);
+      console.error("Error creating product:", error);
+      throw error;
+    }
+  };
+
+  static updateProduct = async (productId: number, productData: product): Promise<any> => {
+    try {
+      const response = await axios.put(`https://localhost:5001/api/products/${productId}`, productData, { httpsAgent: agent });
+      return response.data;
+    } catch (error) {
+      console.error(`Error updating product with ID ${productId}:`, error);
       throw error;
     }
   };
