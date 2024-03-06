@@ -111,9 +111,9 @@ function SelectForm({
         };
         const data = await ProductService.createProduct(productData);
 
-        console.log(data.code);
         if (data.code === 201) {
-          //router.push("/dashboard/products");
+          // router.push("/dashboard/products/create");
+          form.reset();
           toast.success(data.message, {
             position: "bottom-right"
           });
@@ -141,79 +141,6 @@ function SelectForm({
         }
       }
     }
-  };
-  
-
-  // const onSubmit = async (values: z.infer<typeof FormSchema>) => {
-  //   console.log("Values", values);
-  //   if (!product) {
-  //     try {
-  //       const { data } = await axios.post("https://localhost:5001/api/products", values, {
-  //         // headers: {
-  //         //   "Content-Type": "multipart/form-data",
-  //         // },
-  //       });
-
-  //       if (data.statusCode == 201) {
-  //         router.push("/dashboard/products")
-  //         toast.success(data.message, {
-  //           position: "top-right",
-  //           autoClose: 1000,
-  //           hideProgressBar: false,
-  //           closeOnClick: true,
-  //           pauseOnHover: true,
-  //           draggable: true,
-  //           progress: undefined,
-  //           theme: "light",
-  //         });
-  //       }
-  //       router.refresh();
-  //     } catch (error: any) {
-  //       if (error.response) {
-  //         if (error.response.status == 422) {
-  //           setError(error.response.data.errors);
-  //         }
-  //       }
-  //     }
-  //   }
-
-  //   // single user
-  //   if (product) {
-  //     try {
-  //       const { data } = await axios.put(
-  //         `https://localhost:5001/api/products/${product?.productId}`,
-  //         { ...values, _method: "PUT" }
-  //       );
-
-  //       if (data.statusCode == 201) {
-
-  //         const { product } = data.data;
-
-  //         router.back();
-  //         toast.success(data.message, {
-  //           position: "top-right",
-  //           autoClose: 1000,
-  //           hideProgressBar: false,
-  //           closeOnClick: true,
-  //           pauseOnHover: true,
-  //           draggable: true,
-  //           progress: undefined,
-  //           theme: "light",
-  //         });
-  //       }
-  //       router.refresh();
-  //     } catch (error: any) {
-  //       if (error.response) {
-  //         if (error.response.status == 422) {
-  //           setError(error.response.data.errors);
-  //         }
-  //       }
-  //     }
-  //   }
-  // };
-
-  const handleFileChange = (event: any) => {
-    const file = event.target.files[0];
   };
 
   return (

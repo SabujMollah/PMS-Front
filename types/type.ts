@@ -17,3 +17,9 @@ export type product={
   price:number;
   description:string;
 }
+
+export type patient={
+  patientId?:number;
+  name:string;
+  email:string;
+}

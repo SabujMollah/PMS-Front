@@ -17,18 +17,18 @@ export const SIDENAV_ITEMS: SideNavItemGroup[] = [
         title: "Manage",
         menuList: [
             {
-                title: 'Products',
-                path: '/products',
+                title: 'Configuration',
+                path: '/app//dashboard',
                 icon: <BsKanban size={20} />,
                 submenu: true,
                 subMenuItems: [
-                    { title: 'All', path: '/dashboard/products' },
-                    { title: 'New', path: '/dashboard/products/new' },
+                    { title: 'Product', path: '/dashboard/products' },         
+                    { title: 'symptom', path: '/dashboard/products' },            
                 ],
             },
             {
-                title: 'Orders',
-                path: '/orders',
+                title: 'Appoinment',
+                path: '/dashboard/appoinment',
                 icon: <BsListUl size={20} />,
             },
             {
