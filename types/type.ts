@@ -23,3 +23,9 @@ export type patient={
   name:string;
   email:string;
 }
+
+export type symptom={
+  symptomId?:number;
+  name:string;
+  status:string;
+}

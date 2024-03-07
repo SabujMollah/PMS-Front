@@ -17,7 +17,7 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input";
-import { patient } from "@/types/type";
+import { patient, symptom } from "@/types/type";
 import { PatientService } from "@/lib/service/patient/patientservice";
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
@@ -41,12 +41,15 @@ const patienttype: patient = {
     email: '',
 };
 
+interface Props {
+    symptom: symptom[];
+  }
 
-export default function PatientEntry() {
+
+export default function PatientEntry(symptom:Props) {
 
     const router = useRouter();
     const [errors, setError] = useState<any>([]);
-    const [disabled, setDisabled] = useState<boolean>(false);
 
     let defaultValues: FormData = {
         patientId: 0,
@@ -70,7 +73,6 @@ export default function PatientEntry() {
         },
     })
 
-    // 2. Define a submit handler.
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         console.log("Values", values);
         try {
@@ -97,20 +99,18 @@ export default function PatientEntry() {
         }
     }
 
-    const options: OptionType[] = [
-        { value: '1', label: 'Option 1' },
-        { value: '2', label: 'Option 2' },
-        { value: '3', label: 'Option 3' },
-        { value: '4', label: 'Option 4' },
-        { value: '5', label: 'Option 5' }
-    ];
-
-
+    
+    const options: OptionType[] = symptom.symptom.map((item, index) => ({
+        value: (index + 1).toString(),
+        label: item.name
+    }));
+ 
     const [selectedOptions, setSelectedOptions] = useState<OptionType[]>([]);
 
-    // Handle onChange event
     const handleChange = (newValue: MultiValue<OptionType>, actionMeta: ActionMeta<OptionType>) => {
       setSelectedOptions(newValue as OptionType[]);
+
+      console.log(newValue)
     };
 
 
@@ -173,23 +173,18 @@ export default function PatientEntry() {
             <div className="mt-2">
                 <Card>
                     <CardContent className="mt-2">
-                        <Tabs defaultValue="account" className="w-[400px]">
+                        <Tabs defaultValue="symptoms" className="w-[400px]">
                             <TabsList>
-                                <TabsTrigger value="account">Account</TabsTrigger>
+                                <TabsTrigger value="symptoms">Symptoms</TabsTrigger>
                                 <TabsTrigger value="password">Password</TabsTrigger>
                             </TabsList>
-                            <TabsContent value="account">
-
+                            <TabsContent value="symptoms">
                                 <Select
                                     options={options}
                                     isMulti
                                     value={selectedOptions}
                                     onChange={handleChange}
                                 />
-
-
-
-
                             </TabsContent>
                             <TabsContent value="password">Change your password here.</TabsContent>
                         </Tabs>

@@ -23,7 +23,7 @@ export const SIDENAV_ITEMS: SideNavItemGroup[] = [
                 submenu: true,
                 subMenuItems: [
                     { title: 'Product', path: '/dashboard/products' },         
-                    { title: 'symptom', path: '/dashboard/products' },            
+                    { title: 'symptom', path: '/dashboard/symptom' },            
                 ],
             },
             {
